@@ -1,49 +1,80 @@
 package com.example.myspence
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
+import android.widget.*
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
-import kotlinx.coroutines.launch
+import androidx.fragment.app.activityViewModels
+
+
 
 class AddTransactionFragment : DialogFragment() {
+    interface OnTransactionAddedListener {
+        fun onTransactionAdded()
 
-    private lateinit var db: AppDatabase
+    }
+    var transactionAddedListener: OnTransactionAddedListener? = null
+    // ✅ Use shared ViewModel from the Activity
+    private val viewModel: TransactionViewModel by activityViewModels()
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_add_transaction, container, false)
 
+
         val saveButton = view.findViewById<Button>(R.id.saveButton)
         val titleInput = view.findViewById<EditText>(R.id.titleInput)
-        val categoryInput = view.findViewById<EditText>(R.id.categoryInput)
         val amountInput = view.findViewById<EditText>(R.id.amountInput)
+        val spinner: Spinner = view.findViewById(R.id.categorySpinner)
 
-        db = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "myspence-db").build()
+        val categories = listOf("Food 🍽️️", "Transport 🚌", "Shopping 🛍️", "Entertainment 🍿", "Utilities ⚡", "Others")
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
 
         saveButton.setOnClickListener {
-            val title = titleInput.text.toString()
-            val category = categoryInput.text.toString()
+            val title = titleInput.text.toString().trim()
+            val categoryInput = spinner.selectedItem.toString()
+            val amountText = amountInput.text.toString().trim()
             val amount = amountInput.text.toString().toDoubleOrNull() ?: 0.0
+
+            if(title.isEmpty()){
+                titleInput.error = "Title is required"
+                return@setOnClickListener
+            }
+            if(amountText.isEmpty()){
+                amountInput.error = "Amount is required"
+                return@setOnClickListener
+            }
+            if(amount == null||amount<=0.0){
+                amountInput.error = "Invalid amount"
+                return@setOnClickListener
+            }
 
             val transaction = Transaction(
                 title = title,
-                category = category,
+                category = categoryInput,
                 amount = amount,
                 date = System.currentTimeMillis()
             )
 
-            lifecycleScope.launch {
-                db.transactionDao().insert(transaction)
-                dismiss() // This triggers LiveData observer in TransactionFragment
-            }
+            // ✅ Insert using ViewModel
+            viewModel.addTransaction(transaction)
+            transactionAddedListener?.onTransactionAdded()
+            dismiss()
         }
 
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 }

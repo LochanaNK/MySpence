@@ -17,7 +17,7 @@ class TransactionAdapter(
         val titleTextView: TextView = view.findViewById(R.id.titleTextView)
         val categoryTextView: TextView = view.findViewById(R.id.categoryTextView)
         val amountTextView: TextView = view.findViewById(R.id.amountTextView)
-        val deleteButton: ImageButton = view.findViewById(R.id.deleteTransactionButton) // Actually delete btn
+        val deleteButton: ImageButton = view.findViewById(R.id.deleteTransactionButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
