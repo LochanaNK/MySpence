@@ -1,5 +1,8 @@
 package com.example.myspence
 
+import android.app.DatePickerDialog
+import java.text.SimpleDateFormat
+import android.icu.util.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +10,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-
+import java.util.Date
+import java.util.Locale
 
 
 class AddTransactionFragment : DialogFragment() {
@@ -20,6 +24,8 @@ class AddTransactionFragment : DialogFragment() {
     private val viewModel: TransactionViewModel by activityViewModels()
 
 
+    private var selectedDateInMillis: Long = System.currentTimeMillis()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_add_transaction, container, false)
@@ -29,6 +35,26 @@ class AddTransactionFragment : DialogFragment() {
         val titleInput = view.findViewById<EditText>(R.id.titleInput)
         val amountInput = view.findViewById<EditText>(R.id.amountInput)
         val spinner: Spinner = view.findViewById(R.id.categorySpinner)
+        val dateTextView = view.findViewById<TextView>(R.id.dateTextView)
+        updateDateTextView(dateTextView, selectedDateInMillis)
+
+        dateTextView.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = selectedDateInMillis
+
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                {_, year, month, dayOfMonth ->
+                    calendar.set(year,month,dayOfMonth)
+                    selectedDateInMillis = calendar.timeInMillis
+                    updateDateTextView(dateTextView, selectedDateInMillis)
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePicker.show()
+        }
 
         val categories = listOf("Food 🍽️️", "Transport 🚌", "Shopping 🛍️", "Entertainment 🍿", "Utilities ⚡", "Others")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
@@ -58,7 +84,7 @@ class AddTransactionFragment : DialogFragment() {
                 title = title,
                 category = categoryInput,
                 amount = amount,
-                date = System.currentTimeMillis()
+                date = selectedDateInMillis
             )
 
             // ✅ Insert using ViewModel
@@ -68,6 +94,10 @@ class AddTransactionFragment : DialogFragment() {
         }
 
         return view
+    }
+    private fun updateDateTextView(textView: TextView, millis: Long) {
+        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        textView.text = sdf.format(Date(millis))
     }
 
     override fun onStart() {

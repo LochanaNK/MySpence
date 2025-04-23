@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:text="Settings"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="150dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Switch
+            android:id="@+id/switchTheme"
+            android:text="Dark Mode"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnViewFeedback"
+            android:text="View Feedback"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/teal_500"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnClearData"
+            android:text="Clear All Data"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/red_700"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnBackup"
+            android:text="Backup Data"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/teal_500"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnRestore"
+            android:text="Restore Data"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/teal_500"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textAppVersion"
+            android:text="App Version: 1.0"
+            android:textSize="14sp"
+            android:layout_marginTop="32dp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

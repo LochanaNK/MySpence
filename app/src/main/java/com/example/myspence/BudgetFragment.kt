@@ -1,59 +1,97 @@
 package com.example.myspence
 
+import BudgetViewModel
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [BudgetFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BudgetFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val budgetViewModel: BudgetViewModel by activityViewModels()
+
+    private lateinit var editTextBudget: EditText
+    private lateinit var btnSetBudget: Button
+    private lateinit var textCurrentBudget: TextView
+    private lateinit var textTotalExpenses: TextView
+    private lateinit var progressBar: CircularProgressIndicator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_budget, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BudgetFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BudgetFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        editTextBudget = view.findViewById(R.id.editTextBudget)
+        btnSetBudget = view.findViewById(R.id.btnSetBudget)
+        textCurrentBudget = view.findViewById(R.id.textCurrentBudget)
+        textTotalExpenses = view.findViewById(R.id.textTotalExpenses)
+        progressBar = view.findViewById(R.id.progressBar)
+
+        // Set budget button click listener
+        btnSetBudget.setOnClickListener {
+            val input = editTextBudget.text.toString()
+            if (input.isNotBlank()) {
+                val amount = input.toDoubleOrNull()
+                if (amount != null && amount > 0) {
+                    budgetViewModel.setBudgetForCurrentMonth(amount)
+                    Toast.makeText(requireContext(), "✅ Budget set", Toast.LENGTH_SHORT).show()
+                    editTextBudget.text.clear()
+                } else {
+                    Toast.makeText(requireContext(), "⚠️ Enter a valid amount", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(requireContext(), "⚠️ Budget field is empty", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Observe budget and expenses
+        budgetViewModel.currentBudget.observe(viewLifecycleOwner) { budget ->
+            budget?.let {
+                textCurrentBudget.text = "Current Budget: Rs.${"%.2f".format(it.amount)}"
+
+                budgetViewModel.monthlyExpenses.observe(viewLifecycleOwner) { totalSpent ->
+                    val spent = totalSpent ?: 0.0
+                    textTotalExpenses.text = "Total Spent: RS.${"%.2f".format(spent)}"
+
+                    val percent = (spent / it.amount) * 100
+                    val warningText = view.findViewById<TextView>(R.id.textBudgetWarning)
+
+                    when {
+                        percent >= 100 -> {
+                            warningText.text = "🚨 Budget exceeded!"
+                            warningText.visibility = View.VISIBLE
+                        }
+                        percent >= 80 -> {
+                            warningText.text = "⚠️ Almost at your budget limit!"
+                            warningText.visibility = View.VISIBLE
+                        }
+                        else -> {
+                            warningText.visibility = View.GONE
+                        }
+                    }
+
+                    // ProgressBar update
+                    progressBar.progress = percent.toInt().coerceAtMost(100)
+
+                    progressBar.setIndicatorColor(
+                        when {
+                            percent >= 100 -> Color.RED
+                            percent >= 80 -> Color.YELLOW
+                            else -> Color.GREEN
+                        }
+                    )
                 }
             }
+        }
     }
 }

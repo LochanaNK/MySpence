@@ -17,4 +17,12 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE category = :category")
     fun getByCategory(category: String): LiveData<List<Transaction>>
+
+    @Query("SELECT category, SUM(amount) AS total FROM transactions GROUP BY category")
+    fun getExpensesByCategory(): LiveData<List<RawAnalysisData>>
+
+
+
+    @Query("SELECT SUM(amount) FROM transactions WHERE strftime('%Y-%m', date / 1000, 'unixepoch') = :month")
+    fun getTotalExpensesForMonth(month: String): LiveData<Double>
 }

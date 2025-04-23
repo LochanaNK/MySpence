@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="top"
@@ -7,7 +8,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="Set Monthly Budget"
+        android:text="@string/monthly_budget"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -16,23 +17,65 @@
 
     <EditText
         android:id="@+id/editTextBudget"
-    android:hint="Enter budget amount\"
-    android:inputType="numberDecimal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+        android:hint="@string/enter_budget"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnSetBudget"
-    android:text="Set Budget\"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp" />
+        android:text="@string/Set_Budget"
+        android:fontFamily="@font/poppins_semibold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/teal_500"/>
 
     <TextView
         android:id="@+id/textCurrentBudget"
-    android:text="Current Budget: $0\"
-    android:textSize="16sp"
-    android:layout_marginTop="16dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+        android:text="@string/current_budget"
+        android:textSize="20sp"
+        android:fontFamily="@font/poppins_semibold"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textTotalExpenses"
+        android:text="@string/total_spent"
+        android:textSize="20sp"
+        android:fontFamily="@font/poppins_semibold"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:indeterminate="false"
+        android:progress="0"
+        android:max="100"
+        app:indicatorSize="250dp"
+        app:trackThickness="20dp"
+        app:indicatorInset="10dp"
+        app:trackColor="#EEEEEE"
+        app:indicatorColor="@android:color/holo_green_dark" />
+    <TextView
+        android:id="@+id/textBudgetWarning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20sp"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"/>
+
+
 </LinearLayout>

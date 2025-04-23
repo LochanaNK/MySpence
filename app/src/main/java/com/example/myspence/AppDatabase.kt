@@ -5,9 +5,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
 
-@Database(entities = [Transaction::class], version = 1)
+@Database(entities = [Transaction::class, BudgetData::class, User::class], version = 3)
+
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
+    abstract fun budgetDao(): BudgetDao
+    abstract fun userDao(): UserDao
+
 
     companion object {
         @Volatile
@@ -19,7 +23,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "myspence_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration(false)
+                .build()
                 INSTANCE = instance
                 instance
             }

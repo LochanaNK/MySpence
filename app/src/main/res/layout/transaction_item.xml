@@ -12,11 +12,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="@color/slate_600">
 
         <TextView
             android:id="@+id/titleTextView"
-            android:text="Transaction Title"
+            android:text="@string/transaction_title"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_width="0dp"
@@ -28,8 +29,8 @@
 
         <TextView
             android:id="@+id/categoryTextView"
-            android:text="Category"
-            android:textSize="14sp"
+            android:text="@string/category"
+            android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/titleTextView"
@@ -38,14 +39,23 @@
 
         <TextView
             android:id="@+id/amountTextView"
-            android:text="$100.00"
-            android:textSize="16sp"
+            android:text="@string/price"
+            android:textSize="20sp"
             android:textColor="@android:color/holo_green_dark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/titleTextView"
             app:layout_constraintTop_toBottomOf="@+id/categoryTextView"
             android:layout_marginTop="6dp" />
+        <TextView
+            android:id="@+id/dateTextView"
+            android:text="@string/transactionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/titleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/amountTextView"
+            android:layout_marginTop="6dp"/>
 
         <ImageButton
             android:id="@+id/deleteTransactionButton"
@@ -56,7 +66,7 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/icon_delete"
             android:scaleType="centerInside"
-            android:contentDescription="Delete Transaction"
+            android:contentDescription="@string/delete_transaction"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

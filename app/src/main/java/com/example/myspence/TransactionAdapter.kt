@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class TransactionAdapter(
     private var transactions: List<Transaction>,
@@ -18,6 +21,7 @@ class TransactionAdapter(
         val categoryTextView: TextView = view.findViewById(R.id.categoryTextView)
         val amountTextView: TextView = view.findViewById(R.id.amountTextView)
         val deleteButton: ImageButton = view.findViewById(R.id.deleteTransactionButton)
+        val dateTextView: TextView = view.findViewById(R.id.dateTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -30,6 +34,9 @@ class TransactionAdapter(
         holder.titleTextView.text = transaction.title
         holder.categoryTextView.text = transaction.category
         holder.amountTextView.text = "Rs.%.2f".format(transaction.amount)
+        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val dateText = sdf.format(Date(transaction.date))
+        holder.dateTextView.text = dateText
 
         holder.deleteButton.setOnClickListener {
             AlertDialog.Builder(holder.itemView.context)
