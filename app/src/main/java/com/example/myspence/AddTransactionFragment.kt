@@ -1,5 +1,6 @@
 package com.example.myspence
 
+import BudgetViewModel
 import android.app.DatePickerDialog
 import java.text.SimpleDateFormat
 import android.icu.util.*
@@ -22,6 +23,7 @@ class AddTransactionFragment : DialogFragment() {
     var transactionAddedListener: OnTransactionAddedListener? = null
     // ✅ Use shared ViewModel from the Activity
     private val viewModel: TransactionViewModel by activityViewModels()
+    private val budgetViewModel: BudgetViewModel by activityViewModels()
 
 
     private var selectedDateInMillis: Long = System.currentTimeMillis()
@@ -89,6 +91,7 @@ class AddTransactionFragment : DialogFragment() {
 
             // ✅ Insert using ViewModel
             viewModel.addTransaction(transaction)
+            budgetViewModel.refreshMonth()
             transactionAddedListener?.onTransactionAdded()
             dismiss()
         }

@@ -17,7 +17,11 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     val currentBudget = _currentMonth.switchMap { dao.getBudgetForMonth(it) }
 
-    val monthlyExpenses = _currentMonth.switchMap{transactionDao.getTotalExpensesForMonth(it)}
+    val expenseCategories = listOf("Food 🍽️️", "Transport 🚌", "Shopping 🛍️", "Entertainment 🍿", "Utilities ⚡", "Others")
+
+    val monthlyExpenses = _currentMonth.switchMap { month ->
+        transactionDao.getTotalExpensesForMonth(month, expenseCategories)
+    }
 
     fun setBudgetForCurrentMonth(amount: Double) {
         val month = _currentMonth.value ?: getCurrentMonth()
@@ -29,6 +33,11 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     fun setMonth(month: String) {
         _currentMonth.value = month
     }
+
+    fun refreshMonth() {
+        _currentMonth.value = getCurrentMonth()
+    }
+
 
     private fun getCurrentMonth(): String {
         val format = SimpleDateFormat("yyyy-MM", Locale.getDefault())

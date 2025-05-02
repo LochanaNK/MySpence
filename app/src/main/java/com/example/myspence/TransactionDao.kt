@@ -23,6 +23,14 @@ interface TransactionDao {
 
 
 
-    @Query("SELECT SUM(amount) FROM transactions WHERE strftime('%Y-%m', date / 1000, 'unixepoch') = :month")
-    fun getTotalExpensesForMonth(month: String): LiveData<Double>
+    @Query("""
+    SELECT SUM(amount) FROM transactions
+    WHERE category IN (:expenseCategories)
+    AND strftime('%Y-%m', date / 1000, 'unixepoch') = :month
+""")
+    fun getTotalExpensesForMonth(
+        month: String,
+        expenseCategories: List<String>
+    ): LiveData<Double>
+
 }
